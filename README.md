@@ -1,0 +1,2 @@
+# 4-ngc-clusters
+NGC2516, NGC2571, NGC6242, NGC2660
