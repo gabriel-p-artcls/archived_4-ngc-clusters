@@ -8,7 +8,7 @@ import matplotlib.gridspec as gridspec
 def main():
     """
     """
-    for i, file in enumerate(('NGC2516_filt_GUMM', 'NGC2516_19_filt')):
+    for i, file in enumerate(('NGC2516_19_filt', 'NGC2516_filt_GUMM',)):
         print(file)
 
         data = Table.read(file + '.dat', format='ascii')
@@ -44,13 +44,13 @@ def main():
             data, file, pmRA_mean, pmRA_std, pmDE_mean, pmDE_std, plx_mean,
             plx_std, (msk_memb, ), fld_memb)
 
-        # Plot 1-2-3 sigma stars
-        file += "_Nstd"
-        msk_memb = (msk_sigma1, msk_sigma2, msk_sigma3)
-        fld_memb = ~msk_sigma1 & ~msk_sigma2 & ~msk_sigma3
-        makePlot(
-            data, file, pmRA_mean, pmRA_std, pmDE_mean, pmDE_std, plx_mean,
-            plx_std, msk_memb, fld_memb)
+        # # Plot 1-2-3 sigma stars
+        # file += "_Nstd"
+        # msk_memb = (msk_sigma1, msk_sigma2, msk_sigma3)
+        # fld_memb = ~msk_sigma1 & ~msk_sigma2 & ~msk_sigma3
+        # makePlot(
+        #     data, file, pmRA_mean, pmRA_std, pmDE_mean, pmDE_std, plx_mean,
+        #     plx_std, msk_memb, fld_memb)
 
 
 def makePlot(
@@ -129,10 +129,15 @@ def makePlot(
 
     # This is a bright star identified as a member in the 3x3 deg frame,
     # but not in the 6x6 deg frame.
-    if len(msk_memb) == 1 and file == "NGC2516_19_filt":
-        st_3x3 = data[data['DR2Name'] == 'Gaia DR2 5293995281966793216']
+    if len(msk_memb) == 1:
+        if file == "NGC2516_19_filt":
+            # Identified as member in the 3x3 field
+            st_add = data[data['DR2Name'] == 'Gaia DR2 5293995281966793216']
+        else:
+            # Identified as member in the 6x6 field
+            st_add = data[data['DR2Name'] == 'Gaia DR2 5290847861214655616']
         plt.scatter(
-            st_3x3['BP-RP'], st_3x3['Gmag'], edgecolors='r',
+            st_add['BP-RP'], st_add['Gmag'], edgecolors='r',
             alpha=.75, marker='o', facecolors='none', zorder=6)
 
     plt.legend()
